@@ -32,6 +32,8 @@ public class GameManager : MonoBehaviour
         //Set state to ingame at start and run ChangeState function
         state = GameStates.InGame;
         ChangeState(state);
+        //set framerate
+        Application.targetFrameRate = 60;
     }
     public void ChangeState(GameStates gameState)
     {

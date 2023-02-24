@@ -66,7 +66,7 @@ public class PlayerMovement : MonoBehaviour
             //If player has fallen below a certain level trigger respawn function
             if (transform.position.y < -10f) Respawn();
             //If we click the left button run the attack function
-            if (Input.GetMouseButtonDown(0)) Attack();
+            if (Input.GetMouseButtonDown(0) && IsGrounded()) Attack();
             //If we use the horizontal axis run the movement function
             if (Input.GetButton("Horizontal")) Movement(Input.GetAxis("Horizontal"));
             //If we press the space button run the Jump function
@@ -78,6 +78,18 @@ public class PlayerMovement : MonoBehaviour
             {
                 gameManager.state = GameManager.GameStates.Paused;
                 gameManager.ChangeState(gameManager.state);
+            }
+
+            //animator stuff
+            animator.SetBool("isWalking", !(Input.GetAxis("Horizontal") == 0));//if walking button pressed, set walking to true
+            animator.SetBool("isGrounded", IsGrounded());//if touching ground
+            if (!IsGrounded() && rb.velocity.y <= 0)//if not touching ground and starting to fall
+            {
+                animator.SetTrigger("isFalling");
+            }
+            if (Input.GetMouseButtonDown(0) && IsGrounded())
+            {
+                animator.SetTrigger("isAttacking");
             }
         }
     }
@@ -134,6 +146,7 @@ public class PlayerMovement : MonoBehaviour
     {
         //Add force to rigidbody to simulate jump
         rb.AddForce(Vector3.up * jumpHeight, ForceMode2D.Impulse);
+        animator.SetTrigger("isJumping");
     }
     public void EnterDoor(float direction)
     {
