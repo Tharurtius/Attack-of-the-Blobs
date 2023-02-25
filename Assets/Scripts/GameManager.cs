@@ -22,6 +22,10 @@ public class GameManager : MonoBehaviour
     public GameObject pauseMenu;
     [Tooltip("Add the menu child of the end object here")]
     public GameObject endMenu;
+    [Tooltip("Helps keep track of player lives")]
+    public GameObject livesCounter;
+    [Tooltip("Actual sprite for lives counter")]
+    public GameObject livesSprite;
     #endregion
     #region Setup
     private void Start()
@@ -65,6 +69,30 @@ public class GameManager : MonoBehaviour
             default:
                 break;
         }
+    }
+    #endregion
+    #region Functions
+    /// <summary>
+    /// Call this when you lose a life to remove a life from the life counter
+    /// </summary>
+    public void LoseLife()
+    {
+        if (livesCounter.transform.childCount > 0)//if there are lives left
+        {
+            Destroy(livesCounter.transform.GetChild(0).gameObject);
+        }
+        else
+        {
+            Debug.Log("Error no more lives to lose!");
+        }
+    }
+
+    /// <summary>
+    /// Does various stuff to end the game
+    /// </summary>
+    public void EndGame()
+    {
+        ChangeState(GameStates.PostGame);
     }
     #endregion
 }

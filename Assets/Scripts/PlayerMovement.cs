@@ -37,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
     [Tooltip("Add the backgrounds to the array so we can offest the image as we move")]
     public Renderer[] backgrounds = new Renderer[3];
     //private bool check for whether we are in a doorway
-    private bool inDoorway = false;
+    [SerializeField] private bool inDoorway = false;
     //Array to store the sorting layers we have in our project
     private SortingLayer[] _sortingLayers;
     #endregion
@@ -117,12 +117,15 @@ public class PlayerMovement : MonoBehaviour
         if (hp > 1)
         {
             hp--;
+            gameManager.LoseLife();
             transform.position = respawnPosition;
             Camera.main.transform.position = new Vector3(transform.position.x, 0f, -10f);
         }
         //Else we have lost our last health, kill the object
         else
         {
+            // When player dies, call end game functions
+            gameManager.EndGame();
             Destroy(this.gameObject);
         }
     }
