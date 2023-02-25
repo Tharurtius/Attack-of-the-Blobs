@@ -22,7 +22,7 @@ public class PlayerMovement : MonoBehaviour
     [Tooltip("Set the strength of the players jump ability")]
     public float jumpHeight = 6f;
     //A respawn position for the player to return to when they lose health
-    [HideInInspector] public Vector3 respawnPosition = Vector3.zero;
+    public Vector3 respawnPosition = Vector3.zero;
     //A Vector2 to store input direction for movement
     [HideInInspector] public Vector3 moveDirection = Vector3.zero;
     [Header("References")]
@@ -179,6 +179,11 @@ public class PlayerMovement : MonoBehaviour
         if (collision.transform.CompareTag("Respawn")) respawnPosition = collision.transform.position;
         //If we enter the trigger zone for a door set the bool to true
         if (collision.transform.CompareTag("Door")) inDoorway = true;
+        if (collision.transform.CompareTag("Checkpoint"))
+        {
+            respawnPosition = collision.transform.position;
+            StartCoroutine(collision.GetComponent<Checkpoint>().Flash());
+        }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
