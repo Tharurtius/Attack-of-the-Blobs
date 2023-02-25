@@ -13,9 +13,11 @@ public class PlayerMovement : MonoBehaviour
     [Tooltip("Set the cooldown timer for player to have to wait before attacking again")]
     public float cooldown = 0.5f;
     [Tooltip("Set the current time of the cooldown counter")]
-    public float currentCooldown = 0f;
+    public float currentCooldown = 0.5f;
     //Private reference for distance to ground
     private float _distanceToGround;
+    //Private bool to test if we have attacked
+    private bool _hasAttacked = false;
     [Header("Movement Variables")]
     [Tooltip("Set the speed of the character")]
     public float speed = 5f;
@@ -66,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
             //If player has fallen below a certain level trigger respawn function
             if (transform.position.y < -10f) Respawn();
             //If we click the left button run the attack function
-            if (Input.GetMouseButtonDown(0) && IsGrounded()) Attack();
+            if (Input.GetMouseButtonDown(0) && IsGrounded() && !_hasAttacked) Attack();
             //If we use the horizontal axis run the movement function
             if (Input.GetButton("Horizontal")) Movement(Input.GetAxis("Horizontal"));
             //If we press the space button run the Jump function
@@ -79,7 +81,6 @@ public class PlayerMovement : MonoBehaviour
                 gameManager.state = GameManager.GameStates.Paused;
                 gameManager.ChangeState(gameManager.state);
             }
-
             //animator stuff
             animator.SetBool("isWalking", !(Input.GetAxis("Horizontal") == 0));//if walking button pressed, set walking to true
             animator.SetBool("isGrounded", IsGrounded());//if touching ground
@@ -87,7 +88,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 animator.SetTrigger("isFalling");
             }
-            if (Input.GetMouseButtonDown(0) && IsGrounded())
+            if (Input.GetMouseButtonDown(0) && IsGrounded() && !_hasAttacked)
             {
                 animator.SetTrigger("isAttacking");
             }
@@ -102,6 +103,8 @@ public class PlayerMovement : MonoBehaviour
     }
     public void Attack()
     {
+        //Set attack state bool to has attacked
+        _hasAttacked = true;
         //Vector2 to store direction based on which way we are moving
         Vector2 _direction;
         //If we are moving right, set movement to right, else set it left
@@ -157,17 +160,19 @@ public class PlayerMovement : MonoBehaviour
         int layerID = 5;
         //Find the sortingLayer reference in the array that matches our current layer and set the layerID to that index
         for (int i = 0; i < _sortingLayers.Length; i++) if (sprite.sortingLayerID == _sortingLayers[i].id) layerID = i;
-        //If we are using the W button and we are on the largest of our background layers change our layer to the one previous and change our physics layer to Background
+        //If we are using the W button and we are on the largest of our background layers change our layer to the one previous, adjust background transparency and change our physics layer to Background
         if (direction > 0f && layerID > _sortingLayers.Length - 2)
         {
             sprite.sortingLayerID = _sortingLayers[layerID - 1].id;
             gameObject.layer = LayerMask.NameToLayer("Background");
+            backgrounds[2].material.color = new Color(1f,1f,1f,0.45f);
         }
-        //Else if we are pushing S and we are not at the highest layer change our layer to the one after our current and change our physics layer to foreground
+        //Else if we are pushing S and we are not at the highest layer change our layer to the one after our current, adjust background transparency and change our physics layer to foreground
         else if (direction < 0f && layerID < _sortingLayers.Length - 1)
         {
             sprite.sortingLayerID = _sortingLayers[layerID + 1].id;
             gameObject.layer = LayerMask.NameToLayer("Foreground");
+            backgrounds[2].material.color = new Color(1f, 1f, 1f, 1f);
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
