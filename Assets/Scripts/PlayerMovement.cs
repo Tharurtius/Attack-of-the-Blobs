@@ -118,7 +118,7 @@ public class PlayerMovement : MonoBehaviour
         if (!sprite.flipX) _direction = Vector2.right;
         else _direction = Vector2.left;
         //Get hitinfo from a raycast and if it hits anything kill the object as long as object is enemy
-        RaycastHit2D _hitInfo = Physics2D.Raycast(transform.position, _direction, 1.18f);
+        RaycastHit2D _hitInfo = Physics2D.Raycast(transform.position, _direction, 1.8f);
         if (_hitInfo && _hitInfo.collider.CompareTag("Enemy")) _hitInfo.collider.gameObject.GetComponent<Enemy>().Die();
     }
     public void Respawn()
