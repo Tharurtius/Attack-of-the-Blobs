@@ -157,15 +157,17 @@ public class PlayerMovement : MonoBehaviour
         int layerID = 5;
         //Find the sortingLayer reference in the array that matches our current layer and set the layerID to that index
         for (int i = 0; i < _sortingLayers.Length; i++) if (sprite.sortingLayerID == _sortingLayers[i].id) layerID = i;
-        //If we are using the W button and we are not at the lowest of our background layers change our layer to the one previous
-        if (direction > 0f && layerID > 1)
+        //If we are using the W button and we are on the largest of our background layers change our layer to the one previous and change our physics layer to Background
+        if (direction > 0f && layerID > _sortingLayers.Length - 2)
         {
             sprite.sortingLayerID = _sortingLayers[layerID - 1].id;
+            gameObject.layer = LayerMask.NameToLayer("Background");
         }
-        //Else if we are pushing S and we are not at the highest layer change our layer to the one after our current
+        //Else if we are pushing S and we are not at the highest layer change our layer to the one after our current and change our physics layer to foreground
         else if (direction < 0f && layerID < _sortingLayers.Length - 1)
         {
             sprite.sortingLayerID = _sortingLayers[layerID + 1].id;
+            gameObject.layer = LayerMask.NameToLayer("Foreground");
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
