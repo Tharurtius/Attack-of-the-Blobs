@@ -11,9 +11,9 @@ public class PlayerMovement : MonoBehaviour
     [Tooltip("Set the amount of damage you want the player to do")]
     public float damage = 5f;
     [Tooltip("Set the cooldown timer for player to have to wait before attacking again")]
-    public float cooldown = 0.5f;
+    public float cooldown = 1f;
     [Tooltip("Set the current time of the cooldown counter")]
-    public float currentCooldown = 0.5f;
+    public float currentCooldown = 1f;
     //Private reference for distance to ground
     private float _distanceToGround;
     //Private bool to test if we have attacked
@@ -67,8 +67,13 @@ public class PlayerMovement : MonoBehaviour
         {
             //If player has fallen below a certain level trigger respawn function
             if (transform.position.y < -10f) Respawn();
-            //If we click the left button run the attack function
-            if (Input.GetMouseButtonDown(0) && IsGrounded() && !_hasAttacked) Attack();
+            //If we click the left button run the attack function, trigger animation and set attack bool
+            if (Input.GetMouseButtonDown(0) && IsGrounded() && !_hasAttacked)
+            {
+                _hasAttacked = true;
+                animator.SetTrigger("isAttacking");
+                Attack();
+            } 
             //If we use the horizontal axis run the movement function
             if (Input.GetButton("Horizontal")) Movement(Input.GetAxis("Horizontal"));
             //If we press the space button run the Jump function
@@ -88,9 +93,13 @@ public class PlayerMovement : MonoBehaviour
             {
                 animator.SetTrigger("isFalling");
             }
-            if (Input.GetMouseButtonDown(0) && IsGrounded() && !_hasAttacked)
+            //If we have attacked and counter hasn't run out run down counter
+            if (_hasAttacked) currentCooldown = Mathf.MoveTowards(currentCooldown, 0f, Time.deltaTime);
+            //If cooldown hits 0 reset everything so we can attack
+            if (currentCooldown <= 0)
             {
-                animator.SetTrigger("isAttacking");
+                currentCooldown = cooldown;
+                _hasAttacked = false;
             }
         }
     }
@@ -103,8 +112,6 @@ public class PlayerMovement : MonoBehaviour
     }
     public void Attack()
     {
-        //Set attack state bool to has attacked
-        _hasAttacked = true;
         //Vector2 to store direction based on which way we are moving
         Vector2 _direction;
         //If we are moving right, set movement to right, else set it left
@@ -112,7 +119,7 @@ public class PlayerMovement : MonoBehaviour
         else _direction = Vector2.left;
         //Get hitinfo from a raycast and if it hits anything kill the object as long as object is enemy
         RaycastHit2D _hitInfo = Physics2D.Raycast(transform.position, _direction, 1.18f);
-        if (_hitInfo && _hitInfo.collider.CompareTag("Enemy")) Destroy(_hitInfo.collider.gameObject);
+        if (_hitInfo && _hitInfo.collider.CompareTag("Enemy")) _hitInfo.collider.gameObject.GetComponent<Enemy>().Die();
     }
     public void Respawn()
     {
@@ -134,19 +141,33 @@ public class PlayerMovement : MonoBehaviour
     }
     public void Movement(float input)
     {
+        //Vector2 to store direction based on which way we are moving
+        Vector2 _direction;
+        //Flip the sprite according to movement and set direction
+        if (input < 0f) 
+        { 
+            sprite.flipX = true;
+            _direction = Vector2.left;
+        }
+        else 
+        { 
+            sprite.flipX = false; 
+            _direction = Vector2.right;
+        }
         //Move our character based on the input given and make camera match characters x position
         transform.position += new Vector3(input, 0f, 0f) * speed * Time.deltaTime;
         Camera.main.transform.position = new Vector3(transform.position.x, 0f, -10f);
         //For each of our backgrounds offset the background to make it seem like it is moving. Adjust speed to match our movement
-        foreach (Renderer ren in backgrounds)
+        if (!Physics2D.Raycast(transform.position, _direction, 0.26f))
         {
-            Vector4 offset = ren.material.GetVector("_Offset");
-            offset.x += input * (speed / 20) * Time.deltaTime;
-            ren.material.SetVector("_Offset", offset);
+            foreach (Renderer ren in backgrounds)
+            {
+                Vector4 offset = ren.material.GetVector("_Offset");
+                offset.x += input * (speed / 20) * Time.deltaTime;
+                ren.material.SetVector("_Offset", offset);
+            }
         }
-        //Flip the sprite according to movement
-        if (input < 0f) sprite.flipX = true;
-        else sprite.flipX = false;
+        
     }
     public void Jump()
     {

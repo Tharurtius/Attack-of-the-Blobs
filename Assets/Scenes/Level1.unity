@@ -1056,8 +1056,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 3
   damage: 5
-  cooldown: 0.5
-  currentCooldown: 0
+  cooldown: 1
+  currentCooldown: 1
   speed: 5
   jumpHeight: 7.5
   respawnPosition: {x: 0, y: 0, z: 0}
