@@ -111,7 +111,7 @@ SpriteRenderer:
   m_SortingLayer: 4
   m_SortingOrder: 2
   m_Sprite: {fileID: 1018766265, guid: cb9c7353be8edf844b4f93d9a51b7102, type: 3}
-  m_Color: {r: 0.7019608, g: 0.3882353, b: 0.2627451, a: 1}
+  m_Color: {r: 0.5, g: 0.27653632, b: 0.18715084, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -183,6 +183,7 @@ MonoBehaviour:
   DropCheck: {fileID: 962800420181463878}
   speed: 1.5
   anim: {fileID: 962800420763551024}
+  gameManager: {fileID: 0}
 --- !u!50 &962800420763551036
 Rigidbody2D:
   serializedVersion: 4

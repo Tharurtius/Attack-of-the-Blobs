@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine; //Connect to unity engine
-using UnityEngine.XR;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,6 +26,8 @@ public class GameManager : MonoBehaviour
     public GameObject livesCounter;
     [Tooltip("Actual sprite for lives counter")]
     public GameObject livesSprite;
+    [Tooltip("UI element that shows messages to the player")]
+    public TextMeshProUGUI messageBox;
     #endregion
     #region Setup
     private void Start()
@@ -93,6 +95,17 @@ public class GameManager : MonoBehaviour
     public void EndGame()
     {
         ChangeState(GameStates.PostGame);
+    }
+
+    public void OpenMessage(string message)
+    {
+        messageBox.gameObject.SetActive(true);
+        messageBox.text = message;
+    }
+
+    public void CloseMessage()
+    {
+        messageBox.gameObject.SetActive(false);
     }
     #endregion
 }

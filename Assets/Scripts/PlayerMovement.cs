@@ -42,6 +42,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool inDoorway = false;
     //Array to store the sorting layers we have in our project
     private SortingLayer[] _sortingLayers;
+    //Array to store flashing colours
+    [SerializeField] private Color[] colors;
     #endregion
     #region Setup & Update
     void Start()
@@ -189,6 +191,10 @@ public class PlayerMovement : MonoBehaviour
             sprite.sortingLayerID = _sortingLayers[layerID - 1].id;
             gameObject.layer = LayerMask.NameToLayer("Background");
             backgrounds[2].material.color = new Color(1f,1f,1f,0.45f);
+            //change player colour and start coroutine to swap it back
+            sprite.color = colors[0];
+            StopAllCoroutines();//should only stop coroutines on this script
+            StartCoroutine(Flash());
         }
         //Else if we are pushing S and we are not at the highest layer change our layer to the one after our current, adjust background transparency and change our physics layer to foreground
         else if (direction < 0f && layerID < _sortingLayers.Length - 1)
@@ -196,6 +202,10 @@ public class PlayerMovement : MonoBehaviour
             sprite.sortingLayerID = _sortingLayers[layerID + 1].id;
             gameObject.layer = LayerMask.NameToLayer("Foreground");
             backgrounds[2].material.color = new Color(1f, 1f, 1f, 1f);
+            //change player colour and start coroutine to swap it back
+            sprite.color = colors[1];
+            StopAllCoroutines();//should only stop coroutines on this script
+            StartCoroutine(Flash());
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
@@ -217,11 +227,28 @@ public class PlayerMovement : MonoBehaviour
             respawnPosition = collision.transform.position;
             StartCoroutine(collision.GetComponent<Checkpoint>().Flash());
         }
+        //open message box when in range
+        if (collision.transform.CompareTag("Message")) gameManager.OpenMessage(collision.GetComponent<Message>().message);
+        if (collision.transform.CompareTag("End")) gameManager.ChangeState(GameManager.GameStates.PostGame);
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
         //If we exit the trigger zone for a door set the bool to false
         if (collision.transform.CompareTag("Door")) inDoorway = false;
+        //close message box when out of range
+        if (collision.transform.CompareTag("Message")) gameManager.CloseMessage();
+    }
+    #endregion
+    #region Coroutines
+    public IEnumerator Flash()//returns colour to natural colour after time has elapsed
+    {
+        float timer = 1f;
+        while (timer >= 0)
+        {
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+        sprite.color = Color.white;
     }
     #endregion
 }
