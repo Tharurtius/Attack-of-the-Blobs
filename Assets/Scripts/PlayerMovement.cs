@@ -104,13 +104,16 @@ public class PlayerMovement : MonoBehaviour
                 _hasAttacked = false;
             }
         }
+        Debug.Log(gameObject.layer);
     }
     #endregion
     #region Functions
     public bool IsGrounded()
     {
+        //Layer mask to filter out floors we want to interact with
+        int mask = 1 << 0 | 1 << gameObject.layer; ;
         //Raycast to see if there is ground beneath the player
-        return Physics2D.Raycast(transform.position, Vector2.down, _distanceToGround);
+        return Physics2D.Raycast(transform.position, Vector2.down, _distanceToGround, mask);
     }
     public void Attack()
     {
@@ -121,7 +124,7 @@ public class PlayerMovement : MonoBehaviour
         else _direction = Vector2.left;
         //Get hitinfo from a raycast and if it hits anything kill the object as long as object is enemy
         RaycastHit2D _hitInfo = Physics2D.Raycast(transform.position, _direction, 1.8f);
-        if (_hitInfo && _hitInfo.collider.CompareTag("Enemy")) _hitInfo.collider.gameObject.GetComponent<Enemy>().Die();
+        if (_hitInfo && _hitInfo.collider.CompareTag("Enemy") && (_hitInfo.collider.gameObject.layer == transform.gameObject.layer || _hitInfo.collider.gameObject.layer == 0)) _hitInfo.collider.gameObject.GetComponent<Enemy>().Die();
     }
     public void Respawn()
     {
@@ -160,7 +163,7 @@ public class PlayerMovement : MonoBehaviour
         transform.position += new Vector3(input, 0f, 0f) * speed * Time.deltaTime;
         Camera.main.transform.position = new Vector3(transform.position.x, 0f, -10f);
         //For each of our backgrounds offset the background to make it seem like it is moving. Adjust speed to match our movement
-        RaycastHit2D _rayHit = Physics2D.Raycast(transform.position, _direction, 0.5f);
+        RaycastHit2D _rayHit = Physics2D.Raycast(transform.position - new Vector3(0f, 0.5f, 0f), _direction, 0.5f);
         if (_rayHit != false) Debug.Log(_rayHit.collider.name);
         if (!_rayHit || _rayHit.collider.isTrigger || _rayHit.collider.gameObject.layer != transform.gameObject.layer)
         {
@@ -171,7 +174,6 @@ public class PlayerMovement : MonoBehaviour
                 ren.material.SetVector("_Offset", offset);
             }
         }
-        
     }
     public void Jump()
     {

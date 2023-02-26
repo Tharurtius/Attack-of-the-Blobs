@@ -6164,6 +6164,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Default Block (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2783645248236811613, guid: c1659de0b428f8d4eb24d5272a137326, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c1659de0b428f8d4eb24d5272a137326, type: 3}
 --- !u!4 &1926614877 stripped
@@ -6410,6 +6414,10 @@ PrefabInstance:
     - target: {fileID: 2783645248236811613, guid: c1659de0b428f8d4eb24d5272a137326, type: 3}
       propertyPath: m_Name
       value: Default Block
+      objectReference: {fileID: 0}
+    - target: {fileID: 2783645248236811615, guid: c1659de0b428f8d4eb24d5272a137326, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c1659de0b428f8d4eb24d5272a137326, type: 3}
