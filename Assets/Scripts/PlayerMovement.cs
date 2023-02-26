@@ -158,7 +158,9 @@ public class PlayerMovement : MonoBehaviour
         transform.position += new Vector3(input, 0f, 0f) * speed * Time.deltaTime;
         Camera.main.transform.position = new Vector3(transform.position.x, 0f, -10f);
         //For each of our backgrounds offset the background to make it seem like it is moving. Adjust speed to match our movement
-        if (!Physics2D.Raycast(transform.position, _direction, 0.26f))
+        RaycastHit2D _rayHit = Physics2D.Raycast(transform.position, _direction, 0.5f);
+        if (_rayHit != false) Debug.Log(_rayHit.collider.name);
+        if (!_rayHit || _rayHit.collider.isTrigger || _rayHit.collider.gameObject.layer != transform.gameObject.layer)
         {
             foreach (Renderer ren in backgrounds)
             {
