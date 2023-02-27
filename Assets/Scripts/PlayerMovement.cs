@@ -44,6 +44,7 @@ public class PlayerMovement : MonoBehaviour
     private SortingLayer[] _sortingLayers;
     //Array to store flashing colours
     [SerializeField] private Color[] colors;
+    public ContactFilter2D contactFilter;
     #endregion
     #region Setup & Update
     void Start()
@@ -112,7 +113,10 @@ public class PlayerMovement : MonoBehaviour
         //Layer mask to filter out floors we want to interact with
         int mask = 1 << 0 | 1 << gameObject.layer;
         //Raycast to see if there is ground beneath the player
-        return Physics2D.Raycast(transform.position, Vector2.down, _distanceToGround, mask);
+        RaycastHit2D ray1 = Physics2D.Raycast(transform.position - new Vector3(rb.GetComponent<Collider2D>().bounds.extents.x, 0f, 0f), Vector2.down, _distanceToGround, mask);
+        RaycastHit2D ray2 = Physics2D.Raycast(transform.position + new Vector3(rb.GetComponent<Collider2D>().bounds.extents.x, 0f, 0f), Vector2.down, _distanceToGround, mask);
+        if (ray1 || ray2) return true;
+        else return false;
     }
     public void Attack()
     {
