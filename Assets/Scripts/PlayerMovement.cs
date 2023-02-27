@@ -104,14 +104,13 @@ public class PlayerMovement : MonoBehaviour
                 _hasAttacked = false;
             }
         }
-        Debug.Log(gameObject.layer);
     }
     #endregion
     #region Functions
     public bool IsGrounded()
     {
         //Layer mask to filter out floors we want to interact with
-        int mask = 1 << 0 | 1 << gameObject.layer; ;
+        int mask = 1 << 0 | 1 << gameObject.layer;
         //Raycast to see if there is ground beneath the player
         return Physics2D.Raycast(transform.position, Vector2.down, _distanceToGround, mask);
     }
@@ -162,10 +161,12 @@ public class PlayerMovement : MonoBehaviour
         //Move our character based on the input given and make camera match characters x position
         transform.position += new Vector3(input, 0f, 0f) * speed * Time.deltaTime;
         Camera.main.transform.position = new Vector3(transform.position.x, 0f, -10f);
+        //Layer mask to filter walls we want to hit
+        int mask = 1 << 0 | 1 << gameObject.layer;
         //For each of our backgrounds offset the background to make it seem like it is moving. Adjust speed to match our movement
-        RaycastHit2D _rayHit = Physics2D.Raycast(transform.position - new Vector3(0f, 0.5f, 0f), _direction, 0.5f);
+        RaycastHit2D _rayHit = Physics2D.Raycast(transform.position - new Vector3(0f, 0.5f, 0f), _direction, 0.5f, mask);
         if (_rayHit != false) Debug.Log(_rayHit.collider.name);
-        if (!_rayHit || _rayHit.collider.isTrigger || _rayHit.collider.gameObject.layer != transform.gameObject.layer)
+        if (!_rayHit || _rayHit.collider.isTrigger)
         {
             foreach (Renderer ren in backgrounds)
             {
