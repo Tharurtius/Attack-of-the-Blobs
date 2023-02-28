@@ -2382,7 +2382,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2783645248236811608, guid: c1659de0b428f8d4eb24d5272a137326, type: 3}
       propertyPath: m_LocalScale.y
-      value: 10
+      value: 11.00078
       objectReference: {fileID: 0}
     - target: {fileID: 2783645248236811608, guid: c1659de0b428f8d4eb24d5272a137326, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2390,7 +2390,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2783645248236811608, guid: c1659de0b428f8d4eb24d5272a137326, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.6472168
+      value: 1.1471
       objectReference: {fileID: 0}
     - target: {fileID: 2783645248236811608, guid: c1659de0b428f8d4eb24d5272a137326, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2755,15 +2755,15 @@ MonoBehaviour:
     useLayerMask: 0
     useDepth: 0
     useOutsideDepth: 0
-    useNormalAngle: 0
-    useOutsideNormalAngle: 1
+    useNormalAngle: 1
+    useOutsideNormalAngle: 0
     layerMask:
       serializedVersion: 2
       m_Bits: 0
     minDepth: 0
     maxDepth: 0
-    minNormalAngle: 230
-    maxNormalAngle: 310
+    minNormalAngle: 265
+    maxNormalAngle: 275
 --- !u!4 &890696784 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 962800420763551037, guid: f67d78ac8d5d65f4ebf47cc31af8022a, type: 3}
@@ -2915,11 +2915,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2783645248236811608, guid: c1659de0b428f8d4eb24d5272a137326, type: 3}
       propertyPath: m_LocalScale.x
-      value: 5
+      value: 4.486
       objectReference: {fileID: 0}
     - target: {fileID: 2783645248236811608, guid: c1659de0b428f8d4eb24d5272a137326, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 85.55773
+      value: 85.3007
       objectReference: {fileID: 0}
     - target: {fileID: 2783645248236811608, guid: c1659de0b428f8d4eb24d5272a137326, type: 3}
       propertyPath: m_LocalPosition.y
