@@ -61,6 +61,8 @@ public class PlayerMovement : MonoBehaviour
         _distanceToGround = GetComponent<Collider2D>().bounds.extents.y + 0.2f; 
         //Fill sortingLayers array with the sorting layers from our project.
         _sortingLayers = SortingLayer.layers;
+        //Change colour of sprite
+        sprite.color = colors[1];
     }
 
     // Update is called once per frame
@@ -82,7 +84,7 @@ public class PlayerMovement : MonoBehaviour
             //If we press the space button run the Jump function
             if (Input.GetKeyDown(KeyCode.Space) && IsGrounded()) Jump();
             //If we press up or down while inDoorway is true trigger the enter door function
-            if (Input.GetButtonDown("Vertical") && inDoorway == true) EnterDoor(Input.GetAxis("Vertical"));
+            if (Input.GetButtonDown("Vertical") && inDoorway == true) EnterDoor();
             //If we press escape button handle the pausing
             if (Input.GetKeyDown(KeyCode.Escape))
             {
@@ -186,14 +188,14 @@ public class PlayerMovement : MonoBehaviour
         rb.AddForce(Vector3.up * jumpHeight, ForceMode2D.Impulse);
         animator.SetTrigger("isJumping");
     }
-    public void EnterDoor(float direction)
+    public void EnterDoor()
     {
         //Set a layerID int to store the value from the array that matches our current sorting layer
         int layerID = 5;
         //Find the sortingLayer reference in the array that matches our current layer and set the layerID to that index
         for (int i = 0; i < _sortingLayers.Length; i++) if (sprite.sortingLayerID == _sortingLayers[i].id) layerID = i;
         //If we are using the W button and we are on the largest of our background layers change our layer to the one previous, adjust background transparency and change our physics layer to Background
-        if (direction > 0f && layerID > _sortingLayers.Length - 2)
+        if (layerID > _sortingLayers.Length - 2)
         {
             sprite.sortingLayerID = _sortingLayers[layerID - 1].id;
             gameObject.layer = LayerMask.NameToLayer("Background");
@@ -201,11 +203,9 @@ public class PlayerMovement : MonoBehaviour
             //change player colour and start coroutine to swap it back
             sprite.color = colors[0];
             gameManager.GhostBlocks();
-            //StopAllCoroutines();//should only stop coroutines on this script
-            //StartCoroutine(Flash());
         }
         //Else if we are pushing S and we are not at the highest layer change our layer to the one after our current, adjust background transparency and change our physics layer to foreground
-        else if (direction < 0f && layerID < _sortingLayers.Length - 1)
+        else if (layerID < _sortingLayers.Length - 1)
         {
             sprite.sortingLayerID = _sortingLayers[layerID + 1].id;
             gameObject.layer = LayerMask.NameToLayer("Foreground");
@@ -213,8 +213,6 @@ public class PlayerMovement : MonoBehaviour
             //change player colour and start coroutine to swap it back
             sprite.color = colors[1];
             gameManager.SolidBlocks();
-            //StopAllCoroutines();//should only stop coroutines on this script
-            //StartCoroutine(Flash());
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
@@ -246,18 +244,6 @@ public class PlayerMovement : MonoBehaviour
         if (collision.transform.CompareTag("Door")) inDoorway = false;
         //close message box when out of range
         if (collision.transform.CompareTag("Message")) gameManager.CloseMessage();
-    }
-    #endregion
-    #region Coroutines
-    public IEnumerator Flash()//returns colour to natural colour after time has elapsed
-    {
-        float timer = 1f;
-        while (timer >= 0)
-        {
-            timer -= Time.deltaTime;
-            yield return null;
-        }
-        sprite.color = Color.white;
     }
     #endregion
 }
