@@ -29,7 +29,9 @@ public class GameManager : MonoBehaviour
     [Tooltip("UI element that shows messages to the player")]
     public TextMeshProUGUI messageBox;
     [Tooltip("Parent that contains all foreground blocks")]
-    public GameObject blocks;
+    public GameObject fBlocks;
+    [Tooltip("Parent that contains all background blocks")]
+    public GameObject bBlocks;
     #endregion
     #region Setup
     private void Start()
@@ -42,6 +44,7 @@ public class GameManager : MonoBehaviour
         ChangeState(state);
         //set framerate
         Application.targetFrameRate = 60;
+        GhostBlocks(false);
     }
     public void ChangeState(GameStates gameState)
     {
@@ -112,8 +115,9 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Makes foreground blocks no longer transparent
     /// </summary>
-    public void SolidBlocks()
+    public void SolidBlocks(bool foreground)//true if foreground
     {
+        GameObject blocks = foreground ? fBlocks : bBlocks;
         foreach (Transform item in blocks.GetComponentInChildren<Transform>())
         {
             SpriteRenderer sprite = item.GetComponent<SpriteRenderer>();
@@ -123,8 +127,9 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Makes foreground blocks transparent
     /// </summary>
-    public void GhostBlocks()
+    public void GhostBlocks(bool foreground)//true if foreground
     {
+        GameObject blocks = foreground ? fBlocks : bBlocks;
         foreach (Transform item in blocks.GetComponentInChildren<Transform>())
         {
             SpriteRenderer sprite = item.GetComponent<SpriteRenderer>();
