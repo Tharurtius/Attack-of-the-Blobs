@@ -22,7 +22,7 @@ public class PlayerMovement : MonoBehaviour
     [Tooltip("Set the speed of the character")]
     public float speed = 5f;
     [Tooltip("Set the strength of the players jump ability")]
-    public float jumpHeight = 6f;
+    public float jumpHeight = 8f;
     //A respawn position for the player to return to when they lose health
     public Vector3 respawnPosition = Vector3.zero;
     //A Vector2 to store input direction for movement
@@ -162,7 +162,9 @@ public class PlayerMovement : MonoBehaviour
         //For each of our backgrounds offset the background to make it seem like it is moving. Adjust speed to match our movement
         RaycastHit2D _rayHit1 = Physics2D.Raycast(transform.position - new Vector3(0f, rb.GetComponent<Collider2D>().bounds.extents.y - 0.01f, 0f), _direction, 0.5f, mask);
         RaycastHit2D _rayHit2 = Physics2D.Raycast(transform.position + new Vector3(0f, rb.GetComponent<Collider2D>().bounds.extents.y, 0f), _direction, 0.5f, mask);
-        if ((!_rayHit1 && !_rayHit2))
+        RaycastHit2D _rayHit3 = Physics2D.Raycast(transform.position, _direction, 0.5f, mask);
+
+        if ((!_rayHit1 && !_rayHit2 && !_rayHit3))
         {
             foreach (Renderer ren in backgrounds)
             {
