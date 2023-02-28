@@ -77,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 _hasAttacked = true;
                 animator.SetTrigger("isAttacking");
-                Attack();
+                StartCoroutine(Attack());
             } 
             //If we use the horizontal axis run the movement function
             if (Input.GetButton("Horizontal")) Movement(Input.GetAxis("Horizontal"));
@@ -120,17 +120,7 @@ public class PlayerMovement : MonoBehaviour
         if (ray1 || ray2) return true;
         else return false;
     }
-    public void Attack()
-    {
-        //Vector2 to store direction based on which way we are moving
-        Vector2 _direction;
-        //If we are moving right, set movement to right, else set it left
-        if (!sprite.flipX) _direction = Vector2.right;
-        else _direction = Vector2.left;
-        //Get hitinfo from a raycast and if it hits anything kill the object as long as object is enemy
-        RaycastHit2D _hitInfo = Physics2D.Raycast(transform.position, _direction, 1.8f);
-        if (_hitInfo && _hitInfo.collider.CompareTag("Enemy") && (_hitInfo.collider.gameObject.layer == transform.gameObject.layer || _hitInfo.collider.gameObject.layer == 0)) _hitInfo.collider.gameObject.GetComponent<Enemy>().Die();
-    }
+    
     public void Respawn()
     {
         //If we have more than 1 health lower our health by 1 and move back to set respawn point
@@ -246,6 +236,31 @@ public class PlayerMovement : MonoBehaviour
         if (collision.transform.CompareTag("Door")) inDoorway = false;
         //close message box when out of range
         if (collision.transform.CompareTag("Message")) gameManager.CloseMessage();
+    }
+    #endregion
+
+    #region Coroutines
+    IEnumerator Attack()
+    {
+        bool hit = false;
+        float timer = 0.5f;
+        while (!hit && timer >= 0)
+        {
+            //Vector2 to store direction based on which way we are moving
+            Vector2 _direction;
+            //If we are moving right, set movement to right, else set it left
+            if (!sprite.flipX) _direction = Vector2.right;
+            else _direction = Vector2.left;
+            //Get hitinfo from a raycast and if it hits anything kill the object as long as object is enemy
+            RaycastHit2D _hitInfo = Physics2D.Raycast(transform.position, _direction, 1.18f);
+            if (_hitInfo && _hitInfo.collider.CompareTag("Enemy") && (_hitInfo.collider.gameObject.layer == transform.gameObject.layer || _hitInfo.collider.gameObject.layer == 0))
+            {
+                _hitInfo.collider.gameObject.GetComponent<Enemy>().Die();
+                hit = true;
+            }
+            timer -= Time.deltaTime;
+            yield return null;
+        }
     }
     #endregion
 }
