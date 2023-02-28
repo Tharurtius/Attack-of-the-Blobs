@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine; //Connect to unity engine
 using TMPro;
+using UnityEngine.Tilemaps;
 
 public class GameManager : MonoBehaviour
 {
@@ -28,10 +29,10 @@ public class GameManager : MonoBehaviour
     public GameObject livesSprite;
     [Tooltip("UI element that shows messages to the player")]
     public TextMeshProUGUI messageBox;
-    [Tooltip("Parent that contains all foreground blocks")]
-    public GameObject fBlocks;
-    [Tooltip("Parent that contains all background blocks")]
-    public GameObject bBlocks;
+    [Tooltip("Foreground tilemap")]
+    public Tilemap foreMap;
+    [Tooltip("Background tilemap")]
+    public Tilemap backMap;
     #endregion
     #region Setup
     private void Start()
@@ -44,7 +45,7 @@ public class GameManager : MonoBehaviour
         ChangeState(state);
         //set framerate
         Application.targetFrameRate = 60;
-        GhostBlocks(false);
+        GhostBlocks(true);
     }
     public void ChangeState(GameStates gameState)
     {
@@ -113,27 +114,19 @@ public class GameManager : MonoBehaviour
         messageBox.gameObject.SetActive(false);
     }
     /// <summary>
-    /// Makes foreground blocks no longer transparent
-    /// </summary>
-    public void SolidBlocks(bool foreground)//true if foreground
-    {
-        GameObject blocks = foreground ? fBlocks : bBlocks;
-        foreach (Transform item in blocks.GetComponentInChildren<Transform>())
-        {
-            SpriteRenderer sprite = item.GetComponent<SpriteRenderer>();
-            sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, 1f);
-        }
-    }
-    /// <summary>
-    /// Makes foreground blocks transparent
+    /// Makes tilemaps transparent or not
     /// </summary>
     public void GhostBlocks(bool foreground)//true if foreground
     {
-        GameObject blocks = foreground ? fBlocks : bBlocks;
-        foreach (Transform item in blocks.GetComponentInChildren<Transform>())
+        if (foreground)
         {
-            SpriteRenderer sprite = item.GetComponent<SpriteRenderer>();
-            sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, 0.45f);
+            foreMap.color = new Color(1f, 0.6f, 0.1098039f, 1f);
+            backMap.color = new Color(0.5803922f, 0.3647059f, 0.5803922f, 0.5f);
+        }
+        else
+        {
+            foreMap.color = new Color(1f, 0.6f, 0.1098039f, 0.5f);
+            backMap.color = new Color(0.5803922f, 0.3647059f, 0.5803922f, 1f);
         }
     }
     #endregion

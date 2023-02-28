@@ -160,9 +160,9 @@ public class PlayerMovement : MonoBehaviour
         //Layer mask to filter walls we want to hit
         int mask = 1 << 0 | 1 << gameObject.layer;
         //For each of our backgrounds offset the background to make it seem like it is moving. Adjust speed to match our movement
-        RaycastHit2D _rayHit = Physics2D.Raycast(transform.position - new Vector3(0f, 0.5f, 0f), _direction, 0.5f, mask);
-        if (_rayHit != false) Debug.Log(_rayHit.collider.name);
-        if (!_rayHit || _rayHit.collider.isTrigger)
+        RaycastHit2D _rayHit1 = Physics2D.Raycast(transform.position - new Vector3(0f, rb.GetComponent<Collider2D>().bounds.extents.y - 0.01f, 0f), _direction, 0.5f, mask);
+        RaycastHit2D _rayHit2 = Physics2D.Raycast(transform.position + new Vector3(0f, rb.GetComponent<Collider2D>().bounds.extents.y, 0f), _direction, 0.5f, mask);
+        if ((!_rayHit1 && !_rayHit2))
         {
             foreach (Renderer ren in backgrounds)
             {
@@ -192,8 +192,7 @@ public class PlayerMovement : MonoBehaviour
             backgrounds[2].material.color = new Color(1f,1f,1f,0.45f);
             //change player colour and start coroutine to swap it back
             sprite.color = colors[0];
-            gameManager.GhostBlocks(true);
-            gameManager.SolidBlocks(false);
+            gameManager.GhostBlocks(false);
         }
         //Else if we are pushing S and we are not at the highest layer change our layer to the one after our current, adjust background transparency and change our physics layer to foreground
         else if (layerID < _sortingLayers.Length - 1)
@@ -203,8 +202,7 @@ public class PlayerMovement : MonoBehaviour
             backgrounds[2].material.color = new Color(1f, 1f, 1f, 1f);
             //change player colour and start coroutine to swap it back
             sprite.color = colors[1];
-            gameManager.SolidBlocks(true);
-            gameManager.GhostBlocks(false);
+            gameManager.GhostBlocks(true);
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
