@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour
     public GameObject livesSprite;
     [Tooltip("UI element that shows messages to the player")]
     public TextMeshProUGUI messageBox;
+    [Tooltip("Parent that contains all foreground blocks")]
+    public GameObject blocks;
     #endregion
     #region Setup
     private void Start()
@@ -106,6 +108,28 @@ public class GameManager : MonoBehaviour
     public void CloseMessage()
     {
         messageBox.gameObject.SetActive(false);
+    }
+    /// <summary>
+    /// Makes foreground blocks no longer transparent
+    /// </summary>
+    public void SolidBlocks()
+    {
+        foreach (Transform item in blocks.GetComponentInChildren<Transform>())
+        {
+            SpriteRenderer sprite = item.GetComponent<SpriteRenderer>();
+            sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, 1f);
+        }
+    }
+    /// <summary>
+    /// Makes foreground blocks transparent
+    /// </summary>
+    public void GhostBlocks()
+    {
+        foreach (Transform item in blocks.GetComponentInChildren<Transform>())
+        {
+            SpriteRenderer sprite = item.GetComponent<SpriteRenderer>();
+            sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, 0.45f);
+        }
     }
     #endregion
 }

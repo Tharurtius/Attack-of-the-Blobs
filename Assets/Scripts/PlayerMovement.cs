@@ -200,8 +200,9 @@ public class PlayerMovement : MonoBehaviour
             backgrounds[2].material.color = new Color(1f,1f,1f,0.45f);
             //change player colour and start coroutine to swap it back
             sprite.color = colors[0];
-            StopAllCoroutines();//should only stop coroutines on this script
-            StartCoroutine(Flash());
+            gameManager.GhostBlocks();
+            //StopAllCoroutines();//should only stop coroutines on this script
+            //StartCoroutine(Flash());
         }
         //Else if we are pushing S and we are not at the highest layer change our layer to the one after our current, adjust background transparency and change our physics layer to foreground
         else if (direction < 0f && layerID < _sortingLayers.Length - 1)
@@ -211,8 +212,9 @@ public class PlayerMovement : MonoBehaviour
             backgrounds[2].material.color = new Color(1f, 1f, 1f, 1f);
             //change player colour and start coroutine to swap it back
             sprite.color = colors[1];
-            StopAllCoroutines();//should only stop coroutines on this script
-            StartCoroutine(Flash());
+            gameManager.SolidBlocks();
+            //StopAllCoroutines();//should only stop coroutines on this script
+            //StartCoroutine(Flash());
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
