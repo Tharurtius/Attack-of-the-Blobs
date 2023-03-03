@@ -1,6 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.Collections; //Use coroutines
 using UnityEngine; //Connect to Unity Engine
+using UnityEngine.UI; //Edit UI elements
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -234,7 +234,11 @@ public class PlayerMovement : MonoBehaviour
         }
         //open message box when in range
         if (collision.transform.CompareTag("Message")) gameManager.OpenMessage(collision.GetComponent<Message>().message);
-        if (collision.transform.CompareTag("End")) gameManager.ChangeState(GameManager.GameStates.PostGame);
+        if (collision.transform.CompareTag("End")) 
+        {
+            gameManager.endMenu.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = "You Made It!";
+            gameManager.ChangeState(GameManager.GameStates.PostGame); 
+        }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
