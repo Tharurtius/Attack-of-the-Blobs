@@ -38,6 +38,10 @@ public class PlayerMovement : MonoBehaviour
     public SpriteRenderer sprite;
     [Tooltip("Add the backgrounds to the array so we can offest the image as we move")]
     public Renderer[] backgrounds = new Renderer[3];
+    [Tooltip("Where the sword noises come from")]
+    public AudioSource aSource;
+    [Tooltip("Jumping noises")]
+    public AudioSource jSource;
     //private bool check for whether we are in a doorway
     [SerializeField] private bool inDoorway = false;
     //Array to store the sorting layers we have in our project
@@ -179,6 +183,8 @@ public class PlayerMovement : MonoBehaviour
         //Add force to rigidbody to simulate jump
         rb.AddForce(Vector3.up * jumpHeight, ForceMode2D.Impulse);
         animator.SetTrigger("isJumping");
+        //noises
+        jSource.Play();
     }
     public void EnterDoor()
     {
@@ -243,9 +249,11 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator Attack()
     {
         bool hit = false;
-        float timer = 0.5f;
+        float timer = 0.084f;
+        yield return new WaitForSeconds(0.58f);
         while (!hit && timer >= 0)
         {
+            aSource.Play();
             //Vector2 to store direction based on which way we are moving
             Vector2 _direction;
             //If we are moving right, set movement to right, else set it left

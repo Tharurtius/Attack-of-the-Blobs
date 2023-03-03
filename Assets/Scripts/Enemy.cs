@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private Animator anim;
     [SerializeField] private GameManager gameManager;
+    [SerializeField] private AudioSource aSource;
 
     // Start is called before the first frame update
     void Start()
@@ -49,6 +50,7 @@ public class Enemy : MonoBehaviour
 
     public void Die()
     {
+        aSource.Play();
         GetComponent<Collider2D>().enabled = false;
         speed = 0;
         GetComponent<Rigidbody2D>().gravityScale = 0f;
